@@ -1,10 +1,9 @@
 package agh.ics.oop.model;
 
-import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Vector2dTest {
     @Test
@@ -85,7 +84,7 @@ public class Vector2dTest {
     }
 
     @Test
-    public void testSubstract(){
+    public void testSubtract(){
         Vector2d vector1 = new Vector2d(1, 3);
         Vector2d vector2 = new Vector2d(5, -3);
         Vector2d vector3 = new Vector2d(-4, 0);
