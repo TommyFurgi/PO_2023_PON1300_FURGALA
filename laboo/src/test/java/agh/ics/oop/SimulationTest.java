@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -22,12 +19,13 @@ class SimulationTest {
         String[] startArgs = {"f", "ff", "r", "l", "f", "fb", "b", "l", "b", "f"};
         List<MoveDirection> directions = OptionsParser.parse(startArgs);
         List<Vector2d> positions = Arrays.asList(new Vector2d(2, 2), new Vector2d(3, 3));
+        WorldMap worldMap = new RectangularMap();
 //        WHEN
-        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions));
+        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
         simulation.run();
 //        THEN
         List<Animal> animals = simulation.getAnimals();
-        assertEquals(new Vector2d(4, 3), animals.get(0).getPosition());
+        assertEquals(new Vector2d(3, 3), animals.get(0).getPosition());
         assertEquals(new Vector2d(4, 4), animals.get(1).getPosition());
     }
 
@@ -36,7 +34,8 @@ class SimulationTest {
         String[] startArgs = {"f", "f", "r", "l", "f"};
         List<MoveDirection> directions = OptionsParser.parse(startArgs);
         List<Vector2d> positions = new ArrayList<>();
-        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions));
+        WorldMap worldMap = new RectangularMap();
+        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
 
         simulation.run();
 
@@ -49,7 +48,8 @@ class SimulationTest {
         String[] startArgs = {"fog", "fight", "row", "left", "frog", "lollipop", "bag", "lamp", "brown", "fries"};
         List<MoveDirection> directions = OptionsParser.parse(startArgs);
         List<Vector2d> positions = Arrays.asList(new Vector2d(2, 2), new Vector2d(3, 3));
-        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions));
+        WorldMap worldMap = new RectangularMap();
+        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
         simulation.run();
 
 
@@ -64,7 +64,8 @@ class SimulationTest {
         String[] startArgs = {};
         List<MoveDirection> directions = OptionsParser.parse(startArgs);
         List<Vector2d> positions = Arrays.asList(new Vector2d(2, 2), new Vector2d(3, 3));
-        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions));
+        WorldMap worldMap = new RectangularMap();
+        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
         simulation.run();
 
 
@@ -80,7 +81,8 @@ class SimulationTest {
         String[] startArgs = {"f", "r", "f", "r", "f", "f", "f", "f", "f", "r", "f", "f", "f", "f", "f"};
         List<MoveDirection> directions = OptionsParser.parse(startArgs);
         List<Vector2d> positions = new ArrayList<>(List.of(new Vector2d(4, 4)));
-        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions));
+        WorldMap worldMap = new RectangularMap();
+        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
         simulation.run();
 
         List<Animal> animals = simulation.getAnimals();
@@ -92,11 +94,27 @@ class SimulationTest {
         String[] startArgs = {"r", "r", "l", "r", "l", "r", "l"};
         List<MoveDirection> directions = OptionsParser.parse(startArgs);
         List<Vector2d> positions = Arrays.asList(new Vector2d(2, 2), new Vector2d(3, 3));
-        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions));
+        WorldMap worldMap = new RectangularMap();
+        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
         simulation.run();
 
         List<Animal> animals = simulation.getAnimals();
         assertEquals(MapDirection.SOUTH, animals.get(0).getDirection());
         assertEquals(MapDirection.WEST, animals.get(1).getDirection());
+    }
+
+    @Test
+    public void testRunSimulationWithWrongAnimalsPosition() {
+        String[] startArgs = {"f", "f", "r", "l", "f"};
+        List<MoveDirection> directions = OptionsParser.parse(startArgs);
+        List<Vector2d> positions = Arrays.asList(new Vector2d(2, 2), new Vector2d(3, 5), new Vector2d(5, 0));
+        WorldMap worldMap = new RectangularMap();
+        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
+        simulation.run();
+
+        List<Animal> animals = simulation.getAnimals();
+        assertEquals(1, simulation.getAnimals().size());
+        assertEquals(MapDirection.NORTH, animals.get(0).getDirection());
+        assertEquals(new Vector2d(2, 4), animals.get(0).getPosition());
     }
 }
