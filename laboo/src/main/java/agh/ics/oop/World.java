@@ -1,36 +1,40 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.Vector2d;
 
-import static agh.ics.oop.OptionsParser.change;
+import java.util.List;
 
 public class World {
 
-    public static void main(String[] args){
-
-        System.out.println("Start");
-//        run(args);
-        MoveDirection[] changed_arg = change(args);
-        run(changed_arg);
-        System.out.println("Stop");
+    public static void main(String[] args) {
+        List<MoveDirection> directions = OptionsParser.parse(args);
+        List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
+        Simulation simulation = new Simulation(directions, positions);
+        simulation.run();
     }
 
-    static void run(MoveDirection[] args) {
-        int i = 0;
-        while (i < args.length) {
-            switch (args[i]) {
-                case FORWARD -> System.out.print("Zwierzak idzie do przodu");
-                case BACKWARD -> System.out.print("Zwierzak idzie do tyłu");
-                case RIGHT -> System.out.print("Zwierzak skręca w prawo");
-                case LEFT -> System.out.print("Zwierzak skręca w lewo");
+    static void run(List<MoveDirection> args) {
+        for (int i = 0; i < args.size(); i++) {
+            switch (args.get(i)) {
+                case FORWARD:
+                    System.out.print("Zwierzak idzie do przodu");
+                    break;
+                case BACKWARD:
+                    System.out.print("Zwierzak idzie do tyłu");
+                    break;
+                case RIGHT:
+                    System.out.print("Zwierzak skręca w prawo");
+                    break;
+                case LEFT:
+                    System.out.print("Zwierzak skręca w lewo");
+                    break;
             }
 
-            if (i != args.length - 1) {
+            if (i != args.size()-1) {
                 System.out.print(", ");
             }
-            i += 1;
         }
         System.out.println();
     }
-
 }

@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-enum MapDirection {
+public enum MapDirection {
     NORTH,
     SOUTH,
     EAST,
@@ -15,12 +15,13 @@ enum MapDirection {
 
     }
 
+    @Override
     public String toString(){
         return switch(this) {
-            case NORTH -> "Północ";
-            case SOUTH -> "Południe";
-            case EAST -> "Wschód";
-            case WEST -> "Zachód";
+            case NORTH -> "NORTH";
+            case SOUTH -> "SOUTH";
+            case EAST -> "EAST";
+            case WEST -> "WEST";
         };
     }
 
