@@ -1,6 +1,5 @@
 package agh.ics.oop.model;
 
-
 public class Animal {
     private MapDirection direction;
     private Vector2d position;
@@ -21,8 +20,7 @@ public class Animal {
     public MapDirection getDirection() {return direction;}
 
     @Override
-    public String toString(){return this.direction.toString() +" "+ this.position.toString();}
-
+    public String toString(){return String.valueOf(this.direction.toString().charAt(0));}
     public boolean isAt(Vector2d position){
         return this.position.equals(position);
     }
@@ -31,24 +29,22 @@ public class Animal {
         return vector.getX() >= 0 & vector.getX() < 5 & vector.getY() >= 0 & vector.getY() < 5;
     }
 
-    public void move(MoveDirection direction){
+    public void move(MoveDirection direction, MoveValidator validator){
         switch (direction){
             case RIGHT -> this.direction = this.direction.next();
             case LEFT -> this.direction = this.direction.previous();
             case FORWARD -> {
                 Vector2d unitVector = this.direction.toUnitVector();
-                moveInDirection(unitVector);
+                if (validator.canMoveTo(position.add(unitVector))){
+                    position =  position.add(unitVector);
+                }
             }
             case BACKWARD -> {
-                Vector2d unitVector = this.direction.next().next().toUnitVector();
-                moveInDirection(unitVector);
+                Vector2d unitVector = this.direction.toUnitVector().opposite();
+                if (validator.canMoveTo(position.add(unitVector))) {
+                    position = position.add(unitVector);
+                }
             }
-        }
-    }
-    private void moveInDirection(Vector2d unitVector) {
-        Vector2d potentialVector = this.position.add(unitVector);
-        if (isOnMap(potentialVector)) {
-            this.position = potentialVector;
         }
     }
 

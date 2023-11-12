@@ -25,7 +25,7 @@ class AnimalTest {
     @Test
     public void testToString() {
         Animal pet = new Animal();
-        assertEquals("NORTH (2,2)", pet.toString());
+        assertEquals("N", pet.toString());
     }
 
     @Test
@@ -38,53 +38,58 @@ class AnimalTest {
 
     @Test
     public void testMoveForward() {
+        MoveValidator validator = new RectangularMap();
         Animal pet = new Animal();
-        pet.move(MoveDirection.FORWARD);
+        pet.move(MoveDirection.FORWARD, validator);
 
         assertEquals(new Vector2d(2, 3), pet.getPosition());
-        pet.move(MoveDirection.FORWARD);
+        pet.move(MoveDirection.FORWARD, validator);
         assertEquals(new Vector2d(2, 4), pet.getPosition());
     }
 
     @Test
     public void testMoveRightLeft() {
+        MoveValidator validator = new RectangularMap();
         Animal pet = new Animal();
-        pet.move(MoveDirection.RIGHT);
+        pet.move(MoveDirection.RIGHT, validator);
 
         assertEquals(MapDirection.EAST, pet.getDirection());
-        pet.move(MoveDirection.LEFT);
+        pet.move(MoveDirection.LEFT, validator);
         assertEquals(MapDirection.NORTH, pet.getDirection());
     }
 
     @Test
     public void testMoveBackward() {
+        MoveValidator validator = new RectangularMap();
         Animal pet = new Animal();
-        pet.move(MoveDirection.BACKWARD);
-        pet.move(MoveDirection.BACKWARD);
-        pet.move(MoveDirection.BACKWARD);
+        pet.move(MoveDirection.BACKWARD, validator);
+        pet.move(MoveDirection.BACKWARD, validator);
+        pet.move(MoveDirection.BACKWARD, validator);
 
         assertEquals(new Vector2d(2, 0), pet.getPosition());
     }
 
     @Test
     public void testMoveForwardWithinBounds() {
+        MoveValidator validator = new RectangularMap();
         Animal pet = new Animal(new Vector2d(4, 4));
 
-        pet.move(MoveDirection.FORWARD);
+        pet.move(MoveDirection.FORWARD, validator);
         assertEquals(new Vector2d(4, 4), pet.getPosition());
-        pet.move(MoveDirection.RIGHT);
-        pet.move(MoveDirection.FORWARD);
+        pet.move(MoveDirection.RIGHT, validator);
+        pet.move(MoveDirection.FORWARD, validator);
         assertEquals(new Vector2d(4, 4), pet.getPosition());
     }
 
     @Test
     public void testMoveBackwardWithinBounds() {
+        MoveValidator validator = new RectangularMap();
         Animal pet = new Animal(new Vector2d(0, 0));
 
-        pet.move(MoveDirection.BACKWARD);
+        pet.move(MoveDirection.BACKWARD, validator);
         assertEquals(new Vector2d(0, 0), pet.getPosition());
-        pet.move(MoveDirection.RIGHT);
-        pet.move(MoveDirection.BACKWARD);
+        pet.move(MoveDirection.RIGHT, validator);
+        pet.move(MoveDirection.BACKWARD, validator);
         assertEquals(new Vector2d(0, 0), pet.getPosition());
     }
 }

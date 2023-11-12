@@ -29,9 +29,7 @@ public class Vector2d {
 
     @Override
     public String toString() {
-        int x = getX();
-        int y = getY();
-        return "(" + x + "," + y + ")";
+        return "(" + this.x + "," + this.y + ")";
     }
 
     public boolean precedes(Vector2d other) {
@@ -62,10 +60,7 @@ public class Vector2d {
         return new Vector2d(x, y);
     }
 
-    public Vector2d opposite() {
-        return new Vector2d(-1 * this.x, -1 * this.y);
-
-    }
+    public Vector2d opposite() {return new Vector2d(-1 * this.x, -1 * this.y);}
     @Override
     public boolean equals(Object other){
         if (this == other)
@@ -73,14 +68,11 @@ public class Vector2d {
         if (!(other instanceof Vector2d))
             return false;
         Vector2d vec2 = (Vector2d) other;
-        return this.equals_vec2d(vec2);
+        return (this.x == vec2.x) && (this.y == vec2.y);
     }
 
     @Override
     public int hashCode(){
         return Objects.hash(x,y);
-    }
-    public boolean equals_vec2d(Vector2d other) {
-        return (this.x == other.x) && (this.y == other.y);
     }
 }
