@@ -31,16 +31,7 @@ public class OptionsParserTest {
     @Test
     public void testParseMultipleCommands(){
         String[] args = {"ff", "f", "b", "rl", "l", "rr", "r", "fb"};
-        List<MoveDirection> expected_result = new ArrayList<>(Arrays.asList(
-                MoveDirection.FORWARD,
-                MoveDirection.BACKWARD,
-                MoveDirection.LEFT,
-                MoveDirection.RIGHT
-        ));
-
-        List<MoveDirection> function_result = parse(args);
-
-        assertEquals(expected_result,function_result);
+        assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(args));
     }
 
     @Test
@@ -55,9 +46,6 @@ public class OptionsParserTest {
     @Test
     public void testParseAllWrongCommands(){
         String[] args = {"ff", "fight", "back", "rl", "lamp", "rr", "right", "fb"};
-        List<MoveDirection> expected_result = new ArrayList<>();
-        List<MoveDirection> function_result =  parse(args);
-
-        assertEquals(expected_result,function_result);
+        assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(args));
     }
 }

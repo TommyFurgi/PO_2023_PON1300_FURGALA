@@ -1,21 +1,26 @@
 package agh.ics.oop.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import agh.ics.oop.MapVisualizer;
+
+import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap{
     protected Map<Vector2d, Animal> animals = new HashMap<>();
 
+    protected List<MapChangeListener> changeListeners = new ArrayList<>();
+
+    public abstract Boundary getCurrentBounds();
 
     @Override
-    public boolean place(Animal animal) {
-        if (canMoveTo(animal.getPosition())) {
-            animals.put(animal.getPosition(), animal);
-            return true;
+    public void place(Animal animal) throws PositionAlreadyOccupiedException {
+        Vector2d position = animal.getPosition();
+        if (canMoveTo(position)){
+            animals.put(position, animal);
+            return;
         }
-        return false;
+        if (!animal.equals(objectAt(animal.getPosition()))) {
+            throw new PositionAlreadyOccupiedException(position);
+        }
     }
     @Override
     public boolean canMoveTo(Vector2d position) {
@@ -24,11 +29,17 @@ public abstract class AbstractWorldMap implements WorldMap{
 
     @Override
     public void move(Animal animal, MoveDirection direction) {
-        animals.remove(animal.getPosition());
-        animal.move(direction, this);
-        this.place(animal);
-    }
+        Vector2d oldPosition = animal.getPosition();
+        try {
+            animal.move(direction, this);
+            this.place(animal);
+            animals.remove(oldPosition);
+            mapChanged("Moved animal from " + oldPosition + " to " + animal.getPosition());
 
+        } catch (PositionAlreadyOccupiedException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     @Override
     public WorldElement objectAt(Vector2d position) {
         return animals.get(position);
@@ -45,9 +56,31 @@ public abstract class AbstractWorldMap implements WorldMap{
     }
 
     @Override
-    public abstract String toString();
+    public String toString(){
+        Boundary bounds = getCurrentBounds();
+
+        MapVisualizer mapVisualizer = new MapVisualizer(this);
+        return mapVisualizer.draw(bounds.lowerLeftCorner(), bounds.upperRightCorner());
+    }
 
     @Override
     public abstract boolean isOccupied(Vector2d position);
 
+
+    @Override
+    public void addMapChangeListener(MapChangeListener listener) {
+        changeListeners.add(listener);
+    }
+
+    @Override
+    public void removeMapChangeListener(MapChangeListener listener) {
+        changeListeners.remove(listener);
+    }
+
+    @Override
+    public void mapChanged(String message){
+        for (MapChangeListener listener: changeListeners){
+            listener.mapChanged(this, message);
+        }
+    }
 }

@@ -1,44 +1,50 @@
 package agh.ics.oop.model;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RectangularMapTest {
+    private RectangularMap map;
+    private Animal animal;
+
+    @BeforeEach
+    public void setUp() {
+        this.map = new RectangularMap(5, 5);
+        this.animal = new Animal(new Vector2d(2, 3));
+
+        try {
+            map.place(animal);
+        } catch (PositionAlreadyOccupiedException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     @Test
     public void testCanMoveToValidPosition() {
-        RectangularMap map = new RectangularMap();
-        assertTrue(map.canMoveTo(new Vector2d(2, 3))); // Test a valid position
+        assertTrue(map.canMoveTo(new Vector2d(2, 4))); // Test a valid position
     }
 
     @Test
     public void testCanMoveToInvalidPosition() {
-        RectangularMap map = new RectangularMap(5, 5);
         assertFalse(map.canMoveTo(new Vector2d(-1, 3))); // Test an invalid position
     }
 
     @Test
     public void testPlaceAnimal() {
-        RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(new Vector2d(2, 3));
-        assertTrue(map.place(animal));
+        assertEquals(animal,map.objectAt(new Vector2d(2, 3)));
     }
 
 
     @Test
     public void testMoveAnimal() {
-        RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(new Vector2d(2, 3));
-        map.place(animal);
         map.move(animal, MoveDirection.FORWARD);
         assertEquals(new Vector2d(2, 4), animal.getPosition());
     }
 
     @Test
     public void testMoveBeyondMap() {
-        RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(new Vector2d(2, 4));
-        map.place(animal);
         map.move(animal, MoveDirection.FORWARD);
         assertFalse(map.canMoveTo(new Vector2d(2, 5)));
         assertEquals(new Vector2d(2, 4), animal.getPosition());
@@ -46,18 +52,12 @@ class RectangularMapTest {
 
     @Test
     public void testIsOccupied() {
-        RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(new Vector2d(2, 3));
-        map.place(animal);
         assertTrue(map.isOccupied(new Vector2d(2, 3)));
         assertFalse(map.isOccupied(new Vector2d(3, 2)));
     }
 
     @Test
     public void testIsOccupiedAfterMove() {
-        RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(new Vector2d(2, 3));
-        map.place(animal);
         map.move(animal, MoveDirection.FORWARD);
         assertTrue(map.isOccupied(new Vector2d(2, 4)));
         assertFalse(map.isOccupied(new Vector2d(2, 3)));
@@ -65,9 +65,6 @@ class RectangularMapTest {
 
     @Test
     public void testClearMapPositionAfterMove() {
-        RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(new Vector2d(2, 3));
-        map.place(animal);
         map.move(animal, MoveDirection.FORWARD);
         assertNull(map.objectAt(new Vector2d(2, 3)));
         assertEquals(animal, map.objectAt(new Vector2d(2, 4)));
@@ -76,9 +73,6 @@ class RectangularMapTest {
 
     @Test
     public void testObjectAt() {
-        RectangularMap map = new RectangularMap(5, 5);
-        Animal animal = new Animal(new Vector2d(2, 3));
-        map.place(animal);
         assertEquals(animal, map.objectAt(new Vector2d(2, 3)));
         assertNull(map.objectAt(new Vector2d(3, 2)));
     }

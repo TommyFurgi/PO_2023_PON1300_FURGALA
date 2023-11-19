@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.WorldMap;
+import agh.ics.oop.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +18,16 @@ public class Simulation {
         this.animals = new ArrayList<>();
         this.directions = directions;
         this.Map = map;
+        Map.addMapChangeListener(new ConsoleMapDisplay());
         for (Vector2d startPosition: positions) {
-            if (map.canMoveTo(startPosition)) {
-                Animal newAnimal =new Animal(startPosition);
-                this.animals.add(newAnimal);
+            Animal newAnimal =new Animal(startPosition);
+            this.animals.add(newAnimal);
+            try {
                 Map.place(newAnimal);
+                Map.mapChanged("Placed animal on "+startPosition);
+            } catch (PositionAlreadyOccupiedException e) {
+                System.out.println(e.getMessage());
+
             }
         }
 
@@ -34,12 +36,15 @@ public class Simulation {
     public void run() {
         int animalIndex = 0;
         int animals_size = animals.size();
+
+        if (animals_size == 0)
+            return;
+
         for (MoveDirection move : directions) {
             if (animalIndex < animals_size){
                 Animal current_animal = animals.get(animalIndex);
                 Map.move(current_animal, move);
 
-                System.out.println(Map);
                 animalIndex += 1;
             }
             animalIndex %= animals_size;

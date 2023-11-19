@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SimulationTest {
     private Simulation simulation;
@@ -17,16 +16,7 @@ class SimulationTest {
     public void testRunSimulation() {
 //         GIVEN
         String[] startArgs = {"f", "ff", "r", "l", "f", "fb", "b", "l", "b", "f"};
-        List<MoveDirection> directions = OptionsParser.parse(startArgs);
-        List<Vector2d> positions = Arrays.asList(new Vector2d(2, 2), new Vector2d(3, 3));
-        WorldMap worldMap = new RectangularMap();
-//        WHEN
-        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
-        simulation.run();
-//        THEN
-        List<Animal> animals = simulation.getAnimals();
-        assertEquals(new Vector2d(3, 3), animals.get(0).getPosition());
-        assertEquals(new Vector2d(4, 4), animals.get(1).getPosition());
+        assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(startArgs));
     }
 
     @Test
@@ -46,17 +36,7 @@ class SimulationTest {
     @Test
     public void testRunSimulationWithNoMoves() {
         String[] startArgs = {"fog", "fight", "row", "left", "frog", "lollipop", "bag", "lamp", "brown", "fries"};
-        List<MoveDirection> directions = OptionsParser.parse(startArgs);
-        List<Vector2d> positions = Arrays.asList(new Vector2d(2, 2), new Vector2d(3, 3));
-        WorldMap worldMap = new RectangularMap();
-        simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
-        simulation.run();
-
-
-        List<Animal> animals = simulation.getAnimals();
-        assertTrue(directions.isEmpty());
-        assertEquals(new Vector2d(2, 2), animals.get(0).getPosition());
-        assertEquals(new Vector2d(3, 3), animals.get(1).getPosition());
+        assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(startArgs));
     }
     @Test
 
@@ -108,13 +88,13 @@ class SimulationTest {
         String[] startArgs = {"f", "f", "r", "l", "f"};
         List<MoveDirection> directions = OptionsParser.parse(startArgs);
         List<Vector2d> positions = Arrays.asList(new Vector2d(2, 2), new Vector2d(3, 5), new Vector2d(5, 0));
-        WorldMap worldMap = new RectangularMap();
+        WorldMap worldMap = new GrassField(0);
         simulation = new Simulation(new ArrayList<>(directions), new ArrayList<>(positions), worldMap);
         simulation.run();
 
         List<Animal> animals = simulation.getAnimals();
-        assertEquals(1, simulation.getAnimals().size());
-        assertEquals(MapDirection.NORTH, animals.get(0).getDirection());
-        assertEquals(new Vector2d(2, 4), animals.get(0).getPosition());
+        assertEquals(3, simulation.getAnimals().size());
+        assertEquals(MapDirection.WEST, animals.get(0).getDirection());
+        assertEquals(new Vector2d(2, 3), animals.get(0).getPosition());
     }
 }
