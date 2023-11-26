@@ -9,6 +9,7 @@ public class GrassField extends AbstractWorldMap{
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
 
     public GrassField(int grassCount) {
+        super();
         this.size = (int) Math.sqrt(grassCount * 10);
         placeGrasses(grassCount);
     }

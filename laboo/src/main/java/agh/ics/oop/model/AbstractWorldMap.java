@@ -11,6 +11,17 @@ public abstract class AbstractWorldMap implements WorldMap{
 
     public abstract Boundary getCurrentBounds();
 
+    private final UUID id;
+
+    public AbstractWorldMap() {
+        this.id = UUID.randomUUID();
+    }
+
+    @Override
+    public UUID getId() {
+        return this.id;
+    }
+
     @Override
     public void place(Animal animal) throws PositionAlreadyOccupiedException {
         Vector2d position = animal.getPosition();
@@ -18,9 +29,7 @@ public abstract class AbstractWorldMap implements WorldMap{
             animals.put(position, animal);
             return;
         }
-        if (!animal.equals(objectAt(animal.getPosition()))) {
-            throw new PositionAlreadyOccupiedException(position);
-        }
+        throw new PositionAlreadyOccupiedException(position);
     }
     @Override
     public boolean canMoveTo(Vector2d position) {
@@ -30,15 +39,19 @@ public abstract class AbstractWorldMap implements WorldMap{
     @Override
     public void move(Animal animal, MoveDirection direction) {
         Vector2d oldPosition = animal.getPosition();
-        try {
-            animal.move(direction, this);
-            this.place(animal);
-            animals.remove(oldPosition);
-            mapChanged("Moved animal from " + oldPosition + " to " + animal.getPosition());
+        animal.move(direction, this);
+        if ((direction == MoveDirection.FORWARD || direction == MoveDirection.BACKWARD )) {
+            try {
+                this.place(animal);
+                animals.remove(oldPosition);
+                mapChanged("Moved animal from " + oldPosition + " to " + animal.getPosition());
 
-        } catch (PositionAlreadyOccupiedException e) {
-            System.out.println(e.getMessage());
+            } catch (PositionAlreadyOccupiedException e) {
+                System.out.println(e.getMessage());
+                animal.setPosition(oldPosition);
+            }
         }
+
     }
     @Override
     public WorldElement objectAt(Vector2d position) {
