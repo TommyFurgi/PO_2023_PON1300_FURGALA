@@ -11,7 +11,7 @@ import java.util.List;
 public class Simulation {
     private final List<Animal> animals;
     private final List<MoveDirection> directions;
-    private WorldMap Map;
+    private final WorldMap Map;
 
     public List<Animal> getAnimals() {
         return new ArrayList<>(animals);
@@ -21,9 +21,9 @@ public class Simulation {
         this.animals = new ArrayList<>();
         this.directions = directions;
         this.Map = map;
-        for (Vector2d start_pos: positions) {
-            if (map.canMoveTo(start_pos)) {
-                Animal newAnimal =new Animal(start_pos);
+        for (Vector2d startPosition: positions) {
+            if (map.canMoveTo(startPosition)) {
+                Animal newAnimal =new Animal(startPosition);
                 this.animals.add(newAnimal);
                 Map.place(newAnimal);
             }
@@ -32,18 +32,17 @@ public class Simulation {
     }
 
     public void run() {
-        int animal_index = 0;
+        int animalIndex = 0;
         int animals_size = animals.size();
         for (MoveDirection move : directions) {
-            if (animal_index < animals_size){
-                Animal current_animal = animals.get(animal_index);
+            if (animalIndex < animals_size){
+                Animal current_animal = animals.get(animalIndex);
                 Map.move(current_animal, move);
-                System.out.println("Zwierze "+(animal_index+1)+" : "+current_animal);
 
-                animal_index += 1;
+                System.out.println(Map);
+                animalIndex += 1;
             }
-            if (animal_index == animals_size)
-                animal_index = 0;
+            animalIndex %= animals_size;
         }
     }
 }

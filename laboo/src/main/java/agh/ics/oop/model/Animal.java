@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-public class Animal {
+public class Animal implements WorldElement {
     private MapDirection direction;
     private Vector2d position;
 
@@ -13,38 +13,45 @@ public class Animal {
         this.direction = MapDirection.NORTH;
         this.position = position;
     }
-
+    @Override
     public Vector2d getPosition() {
         return position;
     }
-    public MapDirection getDirection() {return direction;}
+
+    public MapDirection getDirection() {
+        return direction;
+    }
 
     @Override
-    public String toString(){return String.valueOf(this.direction.toString().charAt(0));}
+    public String toString(){
+        return String.valueOf(this.direction.toString().charAt(0));
+    }
+
+    @Override
     public boolean isAt(Vector2d position){
         return this.position.equals(position);
     }
 
-    private boolean isOnMap(Vector2d vector) {
-        return vector.getX() >= 0 & vector.getX() < 5 & vector.getY() >= 0 & vector.getY() < 5;
-    }
 
+    @Override
     public void move(MoveDirection direction, MoveValidator validator){
         switch (direction){
             case RIGHT -> this.direction = this.direction.next();
             case LEFT -> this.direction = this.direction.previous();
             case FORWARD -> {
                 Vector2d unitVector = this.direction.toUnitVector();
-                if (validator.canMoveTo(position.add(unitVector))){
-                    position =  position.add(unitVector);
-                }
+                moveInDirection(unitVector, validator);
             }
             case BACKWARD -> {
                 Vector2d unitVector = this.direction.toUnitVector().opposite();
-                if (validator.canMoveTo(position.add(unitVector))) {
-                    position = position.add(unitVector);
-                }
+                moveInDirection(unitVector, validator);
             }
+        }
+    }
+
+    private void moveInDirection(Vector2d unitVector, MoveValidator validator) {
+        if (validator.canMoveTo(position.add(unitVector))){
+            position =  position.add(unitVector);
         }
     }
 
