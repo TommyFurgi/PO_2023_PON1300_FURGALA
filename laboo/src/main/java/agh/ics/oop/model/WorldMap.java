@@ -11,6 +11,8 @@ import java.util.UUID;
  */
 public interface WorldMap extends MoveValidator {
 
+    Boundary getCurrentBounds();
+
     /**
      * Place a animal on the map.
      *

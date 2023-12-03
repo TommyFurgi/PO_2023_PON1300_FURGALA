@@ -9,6 +9,7 @@ public abstract class AbstractWorldMap implements WorldMap{
 
     protected List<MapChangeListener> changeListeners = new ArrayList<>();
 
+    @Override
     public abstract Boundary getCurrentBounds();
 
     private final UUID id;
