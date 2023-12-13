@@ -2,7 +2,9 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Simulation implements Runnable{
@@ -22,6 +24,9 @@ public class Simulation implements Runnable{
         this.animals = new ArrayList<>();
         this.directions = directions;
         this.map = map;
+        map.addMapChangeListener((WorldMap worldMap, String message) ->
+                System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +
+                        " " + message));
         map.addMapChangeListener(new ConsoleMapDisplay());
         for (Vector2d startPosition: positions) {
             Animal newAnimal =new Animal(startPosition);

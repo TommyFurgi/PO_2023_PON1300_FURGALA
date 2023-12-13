@@ -57,12 +57,7 @@ public abstract class AbstractWorldMap implements WorldMap{
 
     @Override
     public Collection<WorldElement> getElements() {
-        Collection<WorldElement> elements = new ArrayList<>();
-        for (Animal animal : animals.values()) {
-            elements.add(animal);
-        }
-
-        return elements;
+        return animals.values().stream().collect(Collectors.toList());
     }
 
     @Override
@@ -93,4 +88,25 @@ public abstract class AbstractWorldMap implements WorldMap{
             listener.mapChanged(this, message);
         }
     }
+
+    @Override
+    public List<Animal> getOrderedAnimalsWithLambda() {
+        Comparator<Animal> positionComparator = Comparator
+                .comparing((Animal animal) -> animal.getPosition().getX())
+                .thenComparing((Animal animal) -> animal.getPosition().getY());
+
+        List<Animal> orderedAnimals = new ArrayList<>(animals.values());
+        Collections.sort(orderedAnimals, positionComparator);
+
+        return orderedAnimals;
+    }
+
+    @Override
+    public List<Animal> getOrderedAnimalsWithStreams() {
+        return animals.values().stream()
+                .sorted(Comparator.comparing((Animal animal)-> animal.getPosition().getX())
+                        .thenComparing((Animal animal)-> animal.getPosition().getY()))
+                .collect(Collectors.toList());
+    }
+
 }
