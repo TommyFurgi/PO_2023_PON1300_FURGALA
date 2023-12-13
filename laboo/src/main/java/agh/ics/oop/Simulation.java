@@ -28,6 +28,7 @@ public class Simulation implements Runnable{
                 System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +
                         " " + message));
         map.addMapChangeListener(new ConsoleMapDisplay());
+        map.addMapChangeListener(new FileMapDisplay(map.getId()));
         for (Vector2d startPosition: positions) {
             Animal newAnimal =new Animal(startPosition);
             this.animals.add(newAnimal);

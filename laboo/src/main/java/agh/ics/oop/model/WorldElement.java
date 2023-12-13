@@ -7,4 +7,5 @@ public interface WorldElement {
 
     boolean isAt(Vector2d position);
 
+    String getResourceName();
 }

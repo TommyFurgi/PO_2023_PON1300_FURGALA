@@ -60,4 +60,16 @@ public class Animal implements WorldElement {
             throw new PositionAlreadyOccupiedException(position.add(unitVector));
     }
 
+
+    @Override
+    public String getResourceName() {
+        String path = "";
+        switch (this.direction){
+            case NORTH -> path = "up.png";
+            case SOUTH -> path = "down.png";
+            case WEST -> path = "left.png";
+            case EAST -> path = "right.png";
+        }
+        return path;
+    }
 }

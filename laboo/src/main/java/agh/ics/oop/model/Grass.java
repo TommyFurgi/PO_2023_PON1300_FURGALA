@@ -22,4 +22,7 @@ public class Grass implements WorldElement{
         return this.position.equals(position);
     }
 
+    public String getResourceName() {
+        return "grass.png";
+    }
 }
