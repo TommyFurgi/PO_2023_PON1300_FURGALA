@@ -15,11 +15,9 @@ class RectangularMapTest {
         this.map = new RectangularMap(5, 5);
         this.animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            map.place(animal);
-        } catch (PositionAlreadyOccupiedException e) {
-            System.out.println(e.getMessage());
-        }
+
+        map.place(animal);
+
     }
     @Test
     public void testCanMoveToValidPosition() {

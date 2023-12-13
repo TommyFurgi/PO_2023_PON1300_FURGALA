@@ -17,17 +17,13 @@ class GrassFieldTest {
             grasses.placeGrass(grass);
         } catch (PositionAlreadyOccupiedException e){
             System.out.println(e.getMessage());
-        }
+}
     }
 
     @Test
     void placeAnimalOnGrass() {
         Animal animal = new Animal(new Vector2d(2, 3));
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
 
 
         assertEquals(animal,grasses.objectAt(new Vector2d(2, 3)));
@@ -37,11 +33,7 @@ class GrassFieldTest {
     void canMoveToGrassField() {
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        }catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
         grasses.move(animal, MoveDirection.FORWARD);
 
         assertEquals(animal, grasses.objectAt(new Vector2d(2, 4)));
@@ -51,11 +43,9 @@ class GrassFieldTest {
     void endlessMap() {
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+
+        grasses.place(animal);
+
         grasses.move(animal, MoveDirection.FORWARD);
         grasses.move(animal, MoveDirection.FORWARD);
         grasses.move(animal, MoveDirection.FORWARD);
@@ -70,11 +60,8 @@ class GrassFieldTest {
     void showUpGrassAfterAnimalMove() {
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }        grasses.move(animal, MoveDirection.FORWARD);
+        grasses.place(animal);
+        grasses.move(animal, MoveDirection.FORWARD);
 
         assertEquals(grass, grasses.objectAt(new Vector2d(2, 3)));
         assertEquals(animal, grasses.objectAt(new Vector2d(2, 4)));
@@ -84,11 +71,7 @@ class GrassFieldTest {
     void isOccupied() {
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
         grasses.move(animal, MoveDirection.FORWARD);
 
         assertTrue(grasses.isOccupied(new Vector2d(2, 3)));
@@ -108,11 +91,7 @@ class GrassFieldTest {
         }
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
 
         assertEquals(grass1, grasses.objectAt(new Vector2d(2, 5)));
         assertEquals(grass2, grasses.objectAt(new Vector2d(1, 0)));
@@ -123,12 +102,10 @@ class GrassFieldTest {
     void cannotMoveToOccupiedField() {
         Animal animal1 = new Animal(new Vector2d(2, 3));
         Animal animal2 = new Animal(new Vector2d(2, 4));
-        try {
-            grasses.place(animal1);
-            grasses.place(animal2);
-        }catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+
+        grasses.place(animal1);
+        grasses.place(animal2);
+
 
         boolean canMove = grasses.canMoveTo(animal1.getPosition().add(MapDirection.NORTH.toUnitVector()));
 
@@ -142,17 +119,11 @@ class GrassFieldTest {
         Animal animal = new Animal(new Vector2d(2, 3));
 
         // Act
-        try {
-            grasses.place(animal);
-        }catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
         grasses.move(animal, MoveDirection.FORWARD);
 
         // Assert
         assertTrue(grasses.isOccupied(new Vector2d(2, 3)));
         assertEquals(grass,grasses.objectAt(new Vector2d(2, 3)));
     }
-
-
 }

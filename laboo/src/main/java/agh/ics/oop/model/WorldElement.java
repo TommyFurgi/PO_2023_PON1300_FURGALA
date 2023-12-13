@@ -7,5 +7,4 @@ public interface WorldElement {
 
     boolean isAt(Vector2d position);
 
-    void move(MoveDirection direction, MoveValidator validator);
 }

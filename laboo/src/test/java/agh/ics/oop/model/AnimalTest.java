@@ -40,31 +40,42 @@ class AnimalTest {
     public void testMoveForward() {
         MoveValidator validator = new RectangularMap();
         Animal pet = new Animal();
-        pet.move(MoveDirection.FORWARD, validator);
-
-        assertEquals(new Vector2d(2, 3), pet.getPosition());
-        pet.move(MoveDirection.FORWARD, validator);
-        assertEquals(new Vector2d(2, 4), pet.getPosition());
+        try {
+            pet.move(MoveDirection.FORWARD, validator);
+            assertEquals(new Vector2d(2, 3), pet.getPosition());
+            pet.move(MoveDirection.FORWARD, validator);
+            assertEquals(new Vector2d(2, 4), pet.getPosition());
+        } catch (PositionAlreadyOccupiedException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
     public void testMoveRightLeft() {
         MoveValidator validator = new RectangularMap();
         Animal pet = new Animal();
-        pet.move(MoveDirection.RIGHT, validator);
+        try{
+            pet.move(MoveDirection.RIGHT, validator);
+            assertEquals(MapDirection.EAST, pet.getDirection());
+            pet.move(MoveDirection.LEFT, validator);
+            assertEquals(MapDirection.NORTH, pet.getDirection());
 
-        assertEquals(MapDirection.EAST, pet.getDirection());
-        pet.move(MoveDirection.LEFT, validator);
-        assertEquals(MapDirection.NORTH, pet.getDirection());
+        } catch (PositionAlreadyOccupiedException e) {
+        System.out.println(e.getMessage());
+        }
     }
 
     @Test
     public void testMoveBackward() {
         MoveValidator validator = new RectangularMap();
         Animal pet = new Animal();
-        pet.move(MoveDirection.BACKWARD, validator);
-        pet.move(MoveDirection.BACKWARD, validator);
-        pet.move(MoveDirection.BACKWARD, validator);
+        try {
+            pet.move(MoveDirection.BACKWARD, validator);
+            pet.move(MoveDirection.BACKWARD, validator);
+            pet.move(MoveDirection.BACKWARD, validator);
+        } catch (PositionAlreadyOccupiedException e) {
+            System.out.println(e.getMessage());
+        }
 
         assertEquals(new Vector2d(2, 0), pet.getPosition());
     }
@@ -74,11 +85,15 @@ class AnimalTest {
         MoveValidator validator = new RectangularMap();
         Animal pet = new Animal(new Vector2d(4, 4));
 
-        pet.move(MoveDirection.FORWARD, validator);
-        assertEquals(new Vector2d(4, 4), pet.getPosition());
-        pet.move(MoveDirection.RIGHT, validator);
-        pet.move(MoveDirection.FORWARD, validator);
-        assertEquals(new Vector2d(4, 4), pet.getPosition());
+        try {
+            pet.move(MoveDirection.FORWARD, validator);
+            assertEquals(new Vector2d(4, 4), pet.getPosition());
+            pet.move(MoveDirection.RIGHT, validator);
+            pet.move(MoveDirection.FORWARD, validator);
+            assertEquals(new Vector2d(4, 4), pet.getPosition());
+        } catch (PositionAlreadyOccupiedException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
@@ -86,10 +101,14 @@ class AnimalTest {
         MoveValidator validator = new RectangularMap();
         Animal pet = new Animal(new Vector2d(0, 0));
 
-        pet.move(MoveDirection.BACKWARD, validator);
-        assertEquals(new Vector2d(0, 0), pet.getPosition());
-        pet.move(MoveDirection.RIGHT, validator);
-        pet.move(MoveDirection.BACKWARD, validator);
-        assertEquals(new Vector2d(0, 0), pet.getPosition());
+        try {
+            pet.move(MoveDirection.BACKWARD, validator);
+            assertEquals(new Vector2d(0, 0), pet.getPosition());
+            pet.move(MoveDirection.RIGHT, validator);
+            pet.move(MoveDirection.BACKWARD, validator);
+            assertEquals(new Vector2d(0, 0), pet.getPosition());
+        } catch (PositionAlreadyOccupiedException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

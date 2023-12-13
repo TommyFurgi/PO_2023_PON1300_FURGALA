@@ -22,7 +22,4 @@ public class Grass implements WorldElement{
         return this.position.equals(position);
     }
 
-    @Override
-    public void move(MoveDirection direction, MoveValidator validator) {
-    }
 }
