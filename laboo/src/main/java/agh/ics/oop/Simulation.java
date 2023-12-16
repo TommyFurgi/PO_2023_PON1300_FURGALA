@@ -39,6 +39,11 @@ public class Simulation implements Runnable{
 
     @Override
     public void run() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         int animalIndex = 0;
         int animals_size = animals.size();
 
@@ -49,6 +54,12 @@ public class Simulation implements Runnable{
             if (animalIndex < animals_size){
                 Animal current_animal = animals.get(animalIndex);
                 Map.move(current_animal, move);
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 animalIndex += 1;
             }

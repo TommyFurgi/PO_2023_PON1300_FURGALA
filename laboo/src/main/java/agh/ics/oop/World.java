@@ -1,6 +1,9 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.*;
+import agh.ics.oop.model.MoveDirection;
+import agh.ics.oop.model.RectangularMap;
+import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.WorldMap;
 
 import java.util.ArrayList;
 import java.util.List;
