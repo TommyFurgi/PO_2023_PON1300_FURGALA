@@ -1,7 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.MapVisualizer;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,33 +17,25 @@ public class GrassField extends AbstractWorldMap{
         RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(size+1, size+1, grassCount);
 
         for (Vector2d grassPosition : randomPositionGenerator) {
-            grasses.put(grassPosition, new Grass(grassPosition));
+            try {
+                placeGrass(new Grass(grassPosition));
+            } catch (PositionAlreadyOccupiedException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
-    public boolean placeGrass(Grass grass){
-        if (!grasses.containsKey(grass.getPosition())){
-            grasses.put(grass.getPosition(), grass);
-            return true;
+    public void placeGrass(Grass grass) throws PositionAlreadyOccupiedException {
+        Vector2d position = grass.getPosition();
+        if (!grasses.containsKey(position)) {
+            grasses.put(position, grass);
+            return;
         }
-        return false;
+        throw new PositionAlreadyOccupiedException(position);
     }
 
     @Override
-    public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position) || grasses.containsKey(position);
-    }
-
-    @Override
-    public WorldElement objectAt(Vector2d position) {
-        if (animals.containsKey(position)) {
-            return super.objectAt(position);
-        }
-        return grasses.get(position);
-    }
-
-    @Override
-    public String toString() {
+    public Boundary getCurrentBounds() {
         int minX = 0, maxX = 1, minY = 0, maxY = 1;
 
         for (Vector2d position : animals.keySet()) {
@@ -62,8 +52,20 @@ public class GrassField extends AbstractWorldMap{
             maxY = Math.max(maxY, position.getY());
         }
 
-        MapVisualizer mapVisualizer = new MapVisualizer(this);
-        return mapVisualizer.draw(new Vector2d(minX, minY), new Vector2d(maxX, maxY));
+        return new Boundary(new Vector2d(minX, minY), new Vector2d(maxX, maxY));
+    }
+
+    @Override
+    public boolean isOccupied(Vector2d position) {
+        return animals.containsKey(position) || grasses.containsKey(position);
+    }
+
+    @Override
+    public WorldElement objectAt(Vector2d position) {
+        if (animals.containsKey(position)) {
+            return super.objectAt(position);
+        }
+        return grasses.get(position);
     }
 
     @Override

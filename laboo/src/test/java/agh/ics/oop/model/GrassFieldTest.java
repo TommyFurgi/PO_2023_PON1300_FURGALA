@@ -1,30 +1,47 @@
 package agh.ics.oop.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GrassFieldTest {
+    private GrassField grasses;
+    private  Grass grass;
+
+    @BeforeEach
+    public void setUp() {
+        this.grasses = new GrassField(0);
+        this.grass = new Grass(new Vector2d(2, 3));
+        try {
+            grasses.placeGrass(grass);
+        } catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }
+    }
 
     @Test
     void placeAnimalOnGrass() {
-        GrassField grasses = new GrassField(0);
-        Grass grass = new Grass(new Vector2d(2, 3));
-        grasses.placeGrass(grass);
         Animal animal = new Animal(new Vector2d(2, 3));
+        try {
+            grasses.place(animal);
+        } catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }
 
 
-        assertTrue(grasses.place(animal));
+        assertEquals(animal,grasses.objectAt(new Vector2d(2, 3)));
     }
 
     @Test
     void canMoveToGrassField() {
-        GrassField grasses = new GrassField(0);
-        Grass grass = new Grass(new Vector2d(2, 4));
-        grasses.placeGrass(grass);
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        grasses.place(animal);
+        try {
+            grasses.place(animal);
+        }catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }
         grasses.move(animal, MoveDirection.FORWARD);
 
         assertEquals(animal, grasses.objectAt(new Vector2d(2, 4)));
@@ -32,10 +49,13 @@ class GrassFieldTest {
 
     @Test
     void endlessMap() {
-        GrassField grasses = new GrassField(10);
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        grasses.place(animal);
+        try {
+            grasses.place(animal);
+        } catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }
         grasses.move(animal, MoveDirection.FORWARD);
         grasses.move(animal, MoveDirection.FORWARD);
         grasses.move(animal, MoveDirection.FORWARD);
@@ -48,13 +68,13 @@ class GrassFieldTest {
 
     @Test
     void showUpGrassAfterAnimalMove() {
-        GrassField grasses = new GrassField(0);
-        Grass grass = new Grass(new Vector2d(2, 3));
-        grasses.placeGrass(grass);
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        grasses.place(animal);
-        grasses.move(animal, MoveDirection.FORWARD);
+        try {
+            grasses.place(animal);
+        } catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }        grasses.move(animal, MoveDirection.FORWARD);
 
         assertEquals(grass, grasses.objectAt(new Vector2d(2, 3)));
         assertEquals(animal, grasses.objectAt(new Vector2d(2, 4)));
@@ -62,12 +82,13 @@ class GrassFieldTest {
 
     @Test
     void isOccupied() {
-        GrassField grasses = new GrassField(0);
-        Grass grass = new Grass(new Vector2d(2, 3));
-        grasses.placeGrass(grass);
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        grasses.place(animal);
+        try {
+            grasses.place(animal);
+        } catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }
         grasses.move(animal, MoveDirection.FORWARD);
 
         assertTrue(grasses.isOccupied(new Vector2d(2, 3)));
@@ -77,14 +98,21 @@ class GrassFieldTest {
 
     @Test
     void objectAt() {
-        GrassField grasses = new GrassField(0);
         Grass grass1 = new Grass(new Vector2d(2, 5));
         Grass grass2 = new Grass(new Vector2d(1, 0));
-        grasses.placeGrass(grass1);
-        grasses.placeGrass(grass2);
+        try {
+            grasses.placeGrass(grass1);
+            grasses.placeGrass(grass2);
+        } catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        grasses.place(animal);
+        try {
+            grasses.place(animal);
+        } catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }
 
         assertEquals(grass1, grasses.objectAt(new Vector2d(2, 5)));
         assertEquals(grass2, grasses.objectAt(new Vector2d(1, 0)));
@@ -93,11 +121,14 @@ class GrassFieldTest {
 
     @Test
     void cannotMoveToOccupiedField() {
-        GrassField grasses = new GrassField(0);
         Animal animal1 = new Animal(new Vector2d(2, 3));
         Animal animal2 = new Animal(new Vector2d(2, 4));
-        grasses.place(animal1);
-        grasses.place(animal2);
+        try {
+            grasses.place(animal1);
+            grasses.place(animal2);
+        }catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }
 
         boolean canMove = grasses.canMoveTo(animal1.getPosition().add(MapDirection.NORTH.toUnitVector()));
 
@@ -108,15 +139,19 @@ class GrassFieldTest {
     @Test
     void animalDoesNotLeaveTrail() {
         // Arrange
-        GrassField grasses = new GrassField(0);
         Animal animal = new Animal(new Vector2d(2, 3));
 
         // Act
-        grasses.place(animal);
+        try {
+            grasses.place(animal);
+        }catch (PositionAlreadyOccupiedException e){
+            System.out.println(e.getMessage());
+        }
         grasses.move(animal, MoveDirection.FORWARD);
 
         // Assert
-        assertFalse(grasses.isOccupied(new Vector2d(2, 3)));
+        assertTrue(grasses.isOccupied(new Vector2d(2, 3)));
+        assertEquals(grass,grasses.objectAt(new Vector2d(2, 3)));
     }
 
 
