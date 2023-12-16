@@ -13,6 +13,9 @@ public class Animal implements WorldElement {
         this.direction = MapDirection.NORTH;
         this.position = position;
     }
+    public void setPosition(Vector2d position) {
+        this.position = position;
+    }
     @Override
     public Vector2d getPosition() {
         return position;

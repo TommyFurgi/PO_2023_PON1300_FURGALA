@@ -5,10 +5,14 @@ import agh.ics.oop.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation {
+public class Simulation implements Runnable{
     private final List<Animal> animals;
     private final List<MoveDirection> directions;
     private final WorldMap Map;
+
+    public WorldMap getWorldMap() {
+        return Map;
+    }
 
     public List<Animal> getAnimals() {
         return new ArrayList<>(animals);
@@ -33,6 +37,7 @@ public class Simulation {
 
     }
 
+    @Override
     public void run() {
         int animalIndex = 0;
         int animals_size = animals.size();

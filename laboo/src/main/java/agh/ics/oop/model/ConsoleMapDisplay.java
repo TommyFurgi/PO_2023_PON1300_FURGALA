@@ -1,11 +1,15 @@
 package agh.ics.oop.model;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ConsoleMapDisplay implements MapChangeListener{
-    private int updateCount = 0;
+    private static final AtomicInteger updateCount = new AtomicInteger(1);
+
     @Override
-    public void mapChanged(WorldMap worldMap, String message) {
-        System.out.println("Update #" + (updateCount) + ": " + message);
+    public synchronized void mapChanged(WorldMap worldMap, String message) {
+        System.out.println("Map ID: " + worldMap.getId());
+        System.out.println("Update #" + updateCount.get() + ": " + message);
         System.out.println(worldMap);
-        updateCount++;
+        updateCount.incrementAndGet();
     }
 }
