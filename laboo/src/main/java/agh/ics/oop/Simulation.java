@@ -2,16 +2,18 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Simulation implements Runnable{
     private final List<Animal> animals;
     private final List<MoveDirection> directions;
-    private final WorldMap Map;
+    private final WorldMap map;
 
     public WorldMap getWorldMap() {
-        return Map;
+        return map;
     }
 
     public List<Animal> getAnimals() {
@@ -21,20 +23,22 @@ public class Simulation implements Runnable{
     public Simulation(List<MoveDirection> directions, List<Vector2d> positions, WorldMap map) {
         this.animals = new ArrayList<>();
         this.directions = directions;
-        this.Map = map;
-        Map.addMapChangeListener(new ConsoleMapDisplay());
+        this.map = map;
+        map.addMapChangeListener((WorldMap worldMap, String message) ->
+                System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +
+                        " " + message));
+        map.addMapChangeListener(new ConsoleMapDisplay());
+        map.addMapChangeListener(new FileMapDisplay(map.getId()));
         for (Vector2d startPosition: positions) {
             Animal newAnimal =new Animal(startPosition);
             this.animals.add(newAnimal);
             try {
-                Map.place(newAnimal);
-                Map.mapChanged("Placed animal on "+startPosition);
+                map.place(newAnimal);
             } catch (PositionAlreadyOccupiedException e) {
                 System.out.println(e.getMessage());
 
             }
         }
-
     }
 
     @Override
@@ -53,7 +57,7 @@ public class Simulation implements Runnable{
         for (MoveDirection move : directions) {
             if (animalIndex < animals_size){
                 Animal current_animal = animals.get(animalIndex);
-                Map.move(current_animal, move);
+                map.move(current_animal, move);
 
                 try {
                     Thread.sleep(1000);

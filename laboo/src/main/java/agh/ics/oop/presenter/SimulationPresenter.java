@@ -2,6 +2,7 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
+import agh.ics.oop.WorldElementBox;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -51,9 +52,15 @@ public class SimulationPresenter implements MapChangeListener {
                 } else if (y == maxY + 1) {
                     label = new Label(String.valueOf(x));
                 } else {
-                    Object object = worldMap.objectAt(new Vector2d(x, y));
-                    if (object != null) {
-                        label = new Label(object.toString());
+                    WorldElement element = worldMap.objectAt(new Vector2d(x, y));
+                    if (element != null) {
+                        try {
+                            WorldElementBox elementBox = new WorldElementBox(element);
+                            mapGrid.add(elementBox, x - minX + 1, maxY - y + 1);
+                            continue;
+                        } catch (IllegalArgumentException e){
+                            System.out.println(e.getMessage());
+                        }
                     }
                 }
 
@@ -64,11 +71,11 @@ public class SimulationPresenter implements MapChangeListener {
         }
 
         for (int i = 0; i < (maxX - minX + 2); i++) {
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(30));
+            mapGrid.getColumnConstraints().add(new ColumnConstraints(40));
         }
 
         for (int i = 0; i < (maxY - minY + 2); i++) {
-            mapGrid.getRowConstraints().add(new RowConstraints(30));
+            mapGrid.getRowConstraints().add(new RowConstraints(40));
         }
     }
 

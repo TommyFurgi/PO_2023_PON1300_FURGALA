@@ -3,6 +3,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.MapVisualizer;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractWorldMap implements WorldMap{
     protected Map<Vector2d, Animal> animals = new HashMap<>();
@@ -24,13 +25,10 @@ public abstract class AbstractWorldMap implements WorldMap{
     }
 
     @Override
-    public void place(Animal animal) throws PositionAlreadyOccupiedException {
+    public void place(Animal animal) {
         Vector2d position = animal.getPosition();
-        if (canMoveTo(position)){
-            animals.put(position, animal);
-            return;
-        }
-        throw new PositionAlreadyOccupiedException(position);
+        animals.put(position, animal);
+        mapChanged("Placed animal on "+position);
     }
     @Override
     public boolean canMoveTo(Vector2d position) {
@@ -40,19 +38,17 @@ public abstract class AbstractWorldMap implements WorldMap{
     @Override
     public void move(Animal animal, MoveDirection direction) {
         Vector2d oldPosition = animal.getPosition();
-        animal.move(direction, this);
-        if ((direction == MoveDirection.FORWARD || direction == MoveDirection.BACKWARD )) {
-            try {
-                this.place(animal);
-                animals.remove(oldPosition);
+        try {
+            animal.move(direction, this);
+            animals.remove(oldPosition);
+            animals.put(animal.getPosition(), animal);
+            if (oldPosition != animal.getPosition()) {
                 mapChanged("Moved animal from " + oldPosition + " to " + animal.getPosition());
-
-            } catch (PositionAlreadyOccupiedException e) {
-                System.out.println(e.getMessage());
-                animal.setPosition(oldPosition);
             }
-        }
 
+        } catch (PositionAlreadyOccupiedException e) {
+            System.out.println(e.getMessage());
+        }
     }
     @Override
     public WorldElement objectAt(Vector2d position) {
@@ -61,12 +57,7 @@ public abstract class AbstractWorldMap implements WorldMap{
 
     @Override
     public Collection<WorldElement> getElements() {
-        Collection<WorldElement> elements = new ArrayList<>();
-        for (Animal animal : animals.values()) {
-            elements.add(animal);
-        }
-
-        return elements;
+        return animals.values().stream().collect(Collectors.toList());
     }
 
     @Override
@@ -97,4 +88,25 @@ public abstract class AbstractWorldMap implements WorldMap{
             listener.mapChanged(this, message);
         }
     }
+
+    @Override
+    public List<Animal> getOrderedAnimalsWithLambda() {
+        Comparator<Animal> positionComparator = Comparator
+                .comparing((Animal animal) -> animal.getPosition().getX())
+                .thenComparing((Animal animal) -> animal.getPosition().getY());
+
+        List<Animal> orderedAnimals = new ArrayList<>(animals.values());
+        Collections.sort(orderedAnimals, positionComparator);
+
+        return orderedAnimals;
+    }
+
+    @Override
+    public List<Animal> getOrderedAnimalsWithStreams() {
+        return animals.values().stream()
+                .sorted(Comparator.comparing((Animal animal)-> animal.getPosition().getX())
+                        .thenComparing((Animal animal)-> animal.getPosition().getY()))
+                .collect(Collectors.toList());
+    }
+
 }

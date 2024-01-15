@@ -3,6 +3,8 @@ package agh.ics.oop.model;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GrassField extends AbstractWorldMap{
     private final int size;
@@ -72,11 +74,8 @@ public class GrassField extends AbstractWorldMap{
     @Override
     public Collection<WorldElement> getElements() {
         Collection<WorldElement> elements = super.getElements();
-        for (Grass grass : grasses.values()) {
-            elements.add(grass);
-        }
 
-        return elements;
+        return Stream.concat(elements.stream(), grasses.values().stream()).collect(Collectors.toList());
     }
 }
 

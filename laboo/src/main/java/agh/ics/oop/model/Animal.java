@@ -36,8 +36,8 @@ public class Animal implements WorldElement {
     }
 
 
-    @Override
-    public void move(MoveDirection direction, MoveValidator validator){
+
+    public void move(MoveDirection direction, MoveValidator validator) throws PositionAlreadyOccupiedException{
         switch (direction){
             case RIGHT -> this.direction = this.direction.next();
             case LEFT -> this.direction = this.direction.previous();
@@ -52,10 +52,24 @@ public class Animal implements WorldElement {
         }
     }
 
-    private void moveInDirection(Vector2d unitVector, MoveValidator validator) {
+    private void moveInDirection(Vector2d unitVector, MoveValidator validator) throws PositionAlreadyOccupiedException{
         if (validator.canMoveTo(position.add(unitVector))){
             position =  position.add(unitVector);
         }
+        else
+            throw new PositionAlreadyOccupiedException(position.add(unitVector));
     }
 
+
+    @Override
+    public String getResourceName() {
+        String path = "";
+        switch (this.direction){
+            case NORTH -> path = "up.png";
+            case SOUTH -> path = "down.png";
+            case WEST -> path = "left.png";
+            case EAST -> path = "right.png";
+        }
+        return path;
+    }
 }

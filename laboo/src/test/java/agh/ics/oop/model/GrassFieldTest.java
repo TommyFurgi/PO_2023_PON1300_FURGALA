@@ -1,13 +1,16 @@
 package agh.ics.oop.model;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GrassFieldTest {
     private GrassField grasses;
-    private  Grass grass;
+    private Grass grass;
 
     @BeforeEach
     public void setUp() {
@@ -15,7 +18,7 @@ class GrassFieldTest {
         this.grass = new Grass(new Vector2d(2, 3));
         try {
             grasses.placeGrass(grass);
-        } catch (PositionAlreadyOccupiedException e){
+        } catch (PositionAlreadyOccupiedException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -23,25 +26,17 @@ class GrassFieldTest {
     @Test
     void placeAnimalOnGrass() {
         Animal animal = new Animal(new Vector2d(2, 3));
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
 
 
-        assertEquals(animal,grasses.objectAt(new Vector2d(2, 3)));
+        assertEquals(animal, grasses.objectAt(new Vector2d(2, 3)));
     }
 
     @Test
     void canMoveToGrassField() {
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        }catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
         grasses.move(animal, MoveDirection.FORWARD);
 
         assertEquals(animal, grasses.objectAt(new Vector2d(2, 4)));
@@ -51,11 +46,9 @@ class GrassFieldTest {
     void endlessMap() {
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+
+        grasses.place(animal);
+
         grasses.move(animal, MoveDirection.FORWARD);
         grasses.move(animal, MoveDirection.FORWARD);
         grasses.move(animal, MoveDirection.FORWARD);
@@ -70,11 +63,8 @@ class GrassFieldTest {
     void showUpGrassAfterAnimalMove() {
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }        grasses.move(animal, MoveDirection.FORWARD);
+        grasses.place(animal);
+        grasses.move(animal, MoveDirection.FORWARD);
 
         assertEquals(grass, grasses.objectAt(new Vector2d(2, 3)));
         assertEquals(animal, grasses.objectAt(new Vector2d(2, 4)));
@@ -84,11 +74,7 @@ class GrassFieldTest {
     void isOccupied() {
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
         grasses.move(animal, MoveDirection.FORWARD);
 
         assertTrue(grasses.isOccupied(new Vector2d(2, 3)));
@@ -103,16 +89,12 @@ class GrassFieldTest {
         try {
             grasses.placeGrass(grass1);
             grasses.placeGrass(grass2);
-        } catch (PositionAlreadyOccupiedException e){
+        } catch (PositionAlreadyOccupiedException e) {
             System.out.println(e.getMessage());
         }
         Animal animal = new Animal(new Vector2d(2, 3));
 
-        try {
-            grasses.place(animal);
-        } catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
 
         assertEquals(grass1, grasses.objectAt(new Vector2d(2, 5)));
         assertEquals(grass2, grasses.objectAt(new Vector2d(1, 0)));
@@ -123,12 +105,10 @@ class GrassFieldTest {
     void cannotMoveToOccupiedField() {
         Animal animal1 = new Animal(new Vector2d(2, 3));
         Animal animal2 = new Animal(new Vector2d(2, 4));
-        try {
-            grasses.place(animal1);
-            grasses.place(animal2);
-        }catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+
+        grasses.place(animal1);
+        grasses.place(animal2);
+
 
         boolean canMove = grasses.canMoveTo(animal1.getPosition().add(MapDirection.NORTH.toUnitVector()));
 
@@ -142,17 +122,64 @@ class GrassFieldTest {
         Animal animal = new Animal(new Vector2d(2, 3));
 
         // Act
-        try {
-            grasses.place(animal);
-        }catch (PositionAlreadyOccupiedException e){
-            System.out.println(e.getMessage());
-        }
+        grasses.place(animal);
         grasses.move(animal, MoveDirection.FORWARD);
 
         // Assert
         assertTrue(grasses.isOccupied(new Vector2d(2, 3)));
-        assertEquals(grass,grasses.objectAt(new Vector2d(2, 3)));
+        assertEquals(grass, grasses.objectAt(new Vector2d(2, 3)));
     }
 
+    @Test
+    public void testGettingOrderedAnimalsWithNoMoves() {
+        Animal animal1 = new Animal(new Vector2d(2, 3));
+        Animal animal2 = new Animal(new Vector2d(2, 4));
 
+        grasses.place(animal1);
+        grasses.place(animal2);
+
+
+        List<Animal> animalListLambda = grasses.getOrderedAnimalsWithLambda();
+        List<Animal> animalListStreams = grasses.getOrderedAnimalsWithStreams();
+        assertEquals(animalListLambda.get(0), animal1);
+        assertEquals(animalListLambda.get(1), animal2);
+        assertEquals(animalListStreams.get(0), animal1);
+        assertEquals(animalListStreams.get(1), animal2);
+    }
+
+    @Test
+    public void testGettingOrderedAnimalsWithMoves() {
+        Animal animal1 = new Animal(new Vector2d(2, 3));
+        Animal animal2 = new Animal(new Vector2d(3, 4));
+
+        grasses.place(animal1);
+        grasses.place(animal2);
+
+
+        grasses.move(animal1, MoveDirection.RIGHT);
+        grasses.move(animal1, MoveDirection.FORWARD);
+        grasses.move(animal1, MoveDirection.FORWARD);
+        grasses.move(animal2, MoveDirection.BACKWARD);
+
+        List<Animal> animalListLambda = grasses.getOrderedAnimalsWithLambda();
+        List<Animal> animalListStreams = grasses.getOrderedAnimalsWithStreams();
+        assertEquals(animalListLambda.get(0), animal2);
+        assertEquals(animalListLambda.get(1), animal1);
+        assertEquals(animalListStreams.get(0), animal2);
+        assertEquals(animalListStreams.get(1), animal1);
+    }
+
+    @Test
+    public void testGetElemnts() {
+        Animal animal1 = new Animal(new Vector2d(2, 3));
+        Animal animal2 = new Animal(new Vector2d(3, 4));
+
+        grasses.place(animal1);
+        grasses.place(animal2);
+
+        List<WorldElement> elements = (List<WorldElement>) grasses.getElements();
+
+        Assertions.assertNotNull(elements);
+        assertEquals(3, elements.size());
+    }
 }
